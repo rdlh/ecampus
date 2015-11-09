@@ -10,9 +10,12 @@ let logger        = require('morgan');
 let bodyParser    = require('body-parser');
 let cookieParser  = require('cookie-parser');
 let assets        = require('connect-assets');
+let mongoose      = require('mongoose');
 
 
 // configure modules
+
+mongoose.connect(process.env.MONGOLAB_URI);
 
 assets().environment.getEngines('.styl').configure((s) => {
   s.use(require('nib')());

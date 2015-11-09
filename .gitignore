@@ -1,9 +1,6 @@
-*.sqlite
 .DS_Store
 .env
 assets/vendor
 bower_components
-ecosystem.json
-knexfile.js
 node_modules
 npm-debug.log
