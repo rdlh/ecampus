@@ -1,0 +1,14 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    title= title
+    meta(name='description', content='')
+    meta(name='viewport', content='width=device-width, user-scalable=no, minimal-ui')
+    != css('require')
+
+  body
+    block content
+
+    != js('vendor')
+    block js
