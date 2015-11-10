@@ -43,6 +43,32 @@ router.get('/api/:town/:schoolYear/calendar/load', (req, res, next) => {
   }
 });
 
+router.get('/api/:town/:schoolYear/calendar', (req, res, next) => {
+  let { date, schoolYear, town } = req.params;
+  schoolYear = schoolYear.toLowerCase();
+  town = town.toLowerCase();
+
+  Event
+    .find({
+      town,
+      schoolYear,
+    })
+    .sort({ startAt: 1 })
+    .exec((err, events) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (!events.length) {
+        res.send(404);
+      } else {
+        res.send(_.map(events, function (e) {
+          return _.pick(e, 'title', 'teacher', 'startAt', 'endAt', 'classroom', 'schoolYear', 'town');
+        }));
+      }
+    });
+});
+
 router.get('/api/:town/:schoolYear/calendar/:date', (req, res, next) => {
   let { date, schoolYear, town } = req.params;
   schoolYear = schoolYear.toLowerCase();
