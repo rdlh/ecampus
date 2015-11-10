@@ -21,8 +21,6 @@ assets().environment.getEngines('.styl').configure((s) => {
   s.use(require('nib')());
 });
 
-app.locals._  = require('lodash');
-
 
 // configure express middleware
 

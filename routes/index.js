@@ -20,7 +20,7 @@ router.post('/', (req, res, next) => {
     .then(function (account) {
       res
         .cookie('account', eval(account.value), { httpOnly: true })
-        .redirect('/api/calendar/11-09-2015');
+        .redirect('/api/lille/i5/calendar/09-11-2015');
     })
     .catch(function (error) {
         next(error);

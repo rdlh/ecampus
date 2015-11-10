@@ -18,9 +18,8 @@ router.get('/api/:town/:schoolYear/calendar/load', (req, res, next) => {
     });
 
   Promise.all(
-    _.times(30, function (i) {
-      console.log(moment([2015, 1, 1]).week(i + 21).format('DD/MM/YYYY'));
-      return calendar(req.cookies.account, moment([2015, 1, 1]).week(i + 21).format('DD/MM/YYYY'));
+    _.times(51, function (i) {
+      return calendar(req.cookies.account, moment([2015, 1, 1]).week(i).format('MM/DD/YYYY'));
     })
   )
     .then(function (items) {
@@ -39,13 +38,18 @@ router.get('/api/:town/:schoolYear/calendar/load', (req, res, next) => {
 });
 
 router.get('/api/:town/:schoolYear/calendar/:date', (req, res, next) => {
-  let { schoolYear, town } = req.params;
+  let { date, schoolYear, town } = req.params;
 
   Event
     .find({
       town,
       schoolYear,
+      startAt: {
+        '$gte': moment(date, 'DD-MM-YYYY').startOf('week'),
+        '$lt': moment(date, 'DD-MM-YYYY').endOf('week'),
+      },
     })
+    .sort({ startAt: 1 })
     .exec((err, events) => {
       if (err) {
         return next(err);
