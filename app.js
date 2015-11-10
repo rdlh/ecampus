@@ -21,6 +21,8 @@ assets().environment.getEngines('.styl').configure((s) => {
   s.use(require('nib')());
 });
 
+app.locals.S = require('string');
+
 
 // configure express middleware
 

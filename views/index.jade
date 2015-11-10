@@ -7,11 +7,22 @@ block content
         form(name='login', method='POST')
           .form-group
             label.control-label(for='email') Email *
-            input#email.form-control(name='email', type='text')
+            input#email.form-control(name='email', type='text', required)
 
           .form-group
             label.control-label(for='password') Mot de passe *
-            input#password.form-control(name='password', type='password')
+            input#password.form-control(name='password', type='password', required)
+
+          .form-group
+            label.control-label(for='promo') Promo *
+            select#promo.form-control(name='promo', required)
+              option(value='')
+
+              each schoolYears, town in whitelist
+                optgroup(label=S(town).capitalize())
+
+                each schoolYear in schoolYears
+                  option(value='#{town} #{schoolYear}')= S(schoolYear).capitalize()
 
           .mtl
             button.btn.btn-success(type='submit') Se connecter

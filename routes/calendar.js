@@ -6,39 +6,47 @@ let { calendar }  = require('../lib/ecampus');
 let Event         = require('../models/event');
 
 router.get('/api/:town/:schoolYear/calendar/load', (req, res, next) => {
-  let { schoolYear, town } = req.params;
+  if (req.cookies.account) {
+    let { schoolYear, town } = req.params;
+    schoolYear = schoolYear.toLowerCase();
+    town = town.toLowerCase();
 
-  Event
-    .find({
-      town,
-      schoolYear,
-    })
-    .exec((err, events) => {
-      _.each(events, (e) => e.remove());
-    });
-
-  Promise.all(
-    _.times(51, function (i) {
-      return calendar(req.cookies.account, moment([2015, 1, 1]).week(i).format('MM/DD/YYYY'));
-    })
-  )
-    .then(function (items) {
-      _.each(_.flatten(items), (e) => {
-        e.schoolYear = schoolYear;
-        e.town = town;
-
-        Event.save(e, (err, event) => {});
+    Event
+      .find({
+        town,
+        schoolYear,
+      })
+      .exec((err, events) => {
+        _.each(events, (e) => e.remove());
       });
 
-      res.redirect(`/api/${town}/${schoolYear}/calendar/${moment().format('DD-MM-YYYY')}`);
-    })
-    .catch(function (error) {
-      next(error);
-    });
+    Promise.all(
+      _.times(51, function (i) {
+        return calendar(req.cookies.account, moment([2015, 1, 1]).week(i).format('MM/DD/YYYY'));
+      })
+    )
+      .then(function (items) {
+        _.each(_.flatten(items), (e) => {
+          e.schoolYear = schoolYear;
+          e.town = town;
+
+          Event.save(e, (err, event) => {});
+        });
+
+        res.redirect(`/api/${town}/${schoolYear}/calendar/${moment().format('DD-MM-YYYY')}`);
+      })
+      .catch(function (error) {
+        next(error);
+      });
+  } else {
+    res.redirect('/');
+  }
 });
 
 router.get('/api/:town/:schoolYear/calendar/:date', (req, res, next) => {
   let { date, schoolYear, town } = req.params;
+  schoolYear = schoolYear.toLowerCase();
+  town = town.toLowerCase();
 
   Event
     .find({

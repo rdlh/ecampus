@@ -1,13 +1,16 @@
+let path      = require('path');
 let express   = require('express');
 let router    = express.Router();
 let { login } = require('../lib/ecampus');
+let whitelist = require(path.join(__dirname, '..', 'config', 'whitelist.json'));
 
 router.get('/', (req, res) => {
-  res.render('index');
+  res.render('index', { whitelist });
 });
 
 router.post('/', (req, res, next) => {
-  let { email, password } = req.body;
+  let { email, password, promo } = req.body;
+  let [town, schoolYear] = promo.split(' ');
 
   let data = {
     'form.submitted': 1,
@@ -20,7 +23,7 @@ router.post('/', (req, res, next) => {
     .then(function (account) {
       res
         .cookie('account', eval(account.value), { httpOnly: true })
-        .redirect('/api/lille/i5/calendar/09-11-2015');
+        .redirect(`/api/${town}/${schoolYear}/calendar/load`);
     })
     .catch(function (error) {
         next(error);
