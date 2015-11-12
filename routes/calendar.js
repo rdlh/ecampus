@@ -22,7 +22,7 @@ router.get('/api/:town/:schoolYear/calendar/load', (req, res, next) => {
 
     Promise.all(
       _.times(51, function (i) {
-        return calendar(req.cookies.account, moment([2015, 1, 1]).week(i).format('MM/DD/YYYY'));
+        return calendar(req.cookies.account, moment([2015, 1, 1]).week(25 + i).format('MM/DD/YYYY'));
       })
     )
       .then(function (items) {
